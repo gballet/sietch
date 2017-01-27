@@ -18,7 +18,9 @@ class Window {
         this.win.setAttribute("width", width);
         this.win.setAttribute("height", height);
         this.win.innerHTML = `
-            <rect width="${this.width}" height="30px" fill="${default_theme.titlebar_bg}"></rect>
+            <rect width="${this.width}" height="30px"
+                id="titlebar"
+                fill="${default_theme.titlebar_bg}"></rect>
 
             <g transform="translate(15, 15)" id="close_button">
                 <circle r="10" fill="${default_theme.titlebar_close_button_color}" stroke-width=1 stroke="black"></circle>
@@ -46,6 +48,39 @@ class Window {
             }
         });
 
+        this.titlebar = this.win.querySelector("#titlebar");
+        this.titlebar.addEventListener("mousedown", (e) => {
+            this.move_x = e.clientX;
+            this.move_y = e.clientY;
+
+            this.titlebar.parentElement.onmousemove = (e) => {
+                let offsetx = e.clientX - this.move_x;
+                let offsety = e.clientY - this.move_y;
+                this.titlebar.parentElement.setAttribute("transform", `translate(${offsetx + this.x}, ${offsety + this.y})`);
+            };
+
+            // For many reasons, the mouse can get out of the window. The mouseup
+            // event might therefore be received by other components, which means
+            // it should be caught by the root window.
+            this.parent.onmouseup = (e) => {
+                this.x += e.clientX - this.move_x;
+                this.y += e.clientY - this.move_y;
+                this.titlebar.parentElement.onmousemove = null;
+                this.parent.onmouseup = null;
+                this.parent.onmouseleave = null;
+            };
+
+            // If the cursor leaves the desktop area, it is as if the mouse had
+            // been released.
+            this.parent.onmouseleave = (e) => {
+                this.x += e.clientX - this.move_x;
+                this.y += e.clientY - this.move_y;
+                this.titlebar.parentElement.onmousemove = null;
+                this.parent.onmouseup = null;
+                this.parent.onmouseleave = null;
+            };
+        }, false);
+
         let main_frame = this.win.querySelector("#main_frame");
         main_frame.addEventListener("click", this.on_click);
     }
@@ -61,6 +96,8 @@ class Window {
     }
 
     draw(x, y) {
+        this.x = x;
+        this.y = y;
         this.win.setAttribute("transform", `translate(${x}, ${y})`);
         this.parent.appendChild(this.win);
     }
