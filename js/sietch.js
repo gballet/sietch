@@ -3,7 +3,37 @@ const default_theme = {
     titlebar_bg: "blue",
     titlebar_fg: "white",
     titlebar_close_button_color: "red",
-    desktop_background: {type: "color", color: "#ccc"}
+    desktop_background: {type: "color", color: "#ccc"},
+    icon_size: 64
+}
+
+class Icon {
+    constructor(title, svgicon, callback, parent) {
+        this.title = title;
+        this.parent = parent;
+        this.callback = callback;
+
+        this.icon = document.createElementNS("http://www.w3.org/2000/svg", "g");
+
+        // TODO add stroke='blue' to the rect if selected
+        this.icon.innerHTML = `
+            <rect x=0 y=0 width=64 height=64 fill="#0000"></rect>
+            <g transform="translate(32, 32)">
+                ${svgicon}
+            </g>
+            <text transform="translate(0, ${64 + 20})">${title}</text>
+        `;
+        this.icon.addEventListener('dblclick', (e) => {
+            this.callback();
+        });
+    }
+
+    draw(x, y) {
+        this.x = x;
+        this.y = y;
+        this.icon.setAttribute("transform", `translate(${x}, ${y})`);
+        this.parent.appendChild(this.icon);
+    }
 }
 
 class Window {
@@ -143,6 +173,12 @@ class Sietch {
         this.last_creation_offset = (this.last_creation_offset + 30) % 120;
 
         return newwin;
+    }
+
+    create_icon(title, icon, cb) {
+        let newicon = new Icon(title, icon, cb, this.frame);
+        newicon.draw(10, 10);
+        return newicon;
     }
 
     set_background(element, background_info) {
