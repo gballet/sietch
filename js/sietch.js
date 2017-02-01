@@ -145,6 +145,10 @@ class Sietch {
         this.background.setAttribute("height", "100%");
         this.set_background(this.background, default_theme.desktop_background);
 
+        this.background.addEventListener("contextmenu", (e) => {
+            e.preventDefault();
+        }, false);
+
         // Like old Windows(tm) time
         this.last_creation_offset = 0;
 
