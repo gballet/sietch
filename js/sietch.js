@@ -36,6 +36,44 @@ class Icon {
     }
 }
 
+class Menu {
+    // data is a set of tuples of format: {title, callback}
+    constructor(data, parent, session) {
+        this.data = data;
+        this.parent = parent;
+        this.session = session;
+
+        // TODO check format for data
+    }
+
+    show(x,y) {
+        this.menu = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        this.menu.x = x;
+        this.menu.y = y;
+
+        let entries = "";
+        for (let i in this.data) {
+            entries += `<text transform="translate(5, ${(i+1)*20})">${this.data[i][0]}</text>`;
+        }
+
+        this.menu.innerHTML = `
+            <rect x=0 y=0 width=${100} height=${this.data.length * 30} fill="darkgrey" stroke="black"></rect>
+            ${entries}
+        `;
+        this.menu.setAttribute("transform", `translate(${x},${y})`);
+        this.menu.addEventListener("click", (e) => { e.preventDefault(); this.clicked(e); }, false);
+
+        this.parent.appendChild(this.menu);
+    }
+
+    clicked(event) {
+        let entry = Math.floor(+(event.pageY - this.menu.y) / 30);
+        if (event.buttons == 0) {
+            this.data[entry][1]();
+        }
+    }
+}
+
 class Window {
     constructor(title, width, height, parent, session) {
         this.width = width;
@@ -145,8 +183,14 @@ class Sietch {
         this.background.setAttribute("height", "100%");
         this.set_background(this.background, default_theme.desktop_background);
 
+        this.desktop_menu = new Menu([["New...", (e) => { alert("Not yet implemented"); }]], this.frame, this);
+
         this.background.addEventListener("contextmenu", (e) => {
             e.preventDefault();
+
+            if (e.buttons == 2) {
+                this.desktop_menu.show(e.pageX, e.pageY);
+            }
         }, false);
 
         // Like old Windows(tm) time
