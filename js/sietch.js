@@ -12,6 +12,7 @@ class Button {
         this.title = title;
         this.parent = parent;
         this.onclick = onclick;
+        this.pressed = false;
 
         this.button = document.createElementNS("http://www.w3.org/2000/svg", "g");
         this.button.innerHTML = `
@@ -23,16 +24,21 @@ class Button {
             <line x1=${width} y1=${height} y2=${height} x2=1 stroke="darkgrey"></line>
         `;
         this.button.addEventListener("mousedown", () => {
+            this.pressed = true;
             this.invert_shadows();
         }, false);
         this.button.addEventListener("mouseleave", () => {
-            console.log("coucou");
+            if (this.pressed) {
+                this.pressed = false;
+                this.invert_shadows();
+            }
         }, false);
         this.button.addEventListener("mouseup", () => {
-            // TODO must make sure that, upon entering the button, the user
-            // isn't already pressing the mouse button down.
-            this.invert_shadows();
-            this.onclick();
+            if (this.pressed) {
+                this.pressed = false;
+                this.invert_shadows();
+                this.onclick();
+            }
         }, false);
     }
 
