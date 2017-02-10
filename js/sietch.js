@@ -7,6 +7,54 @@ const default_theme = {
     icon_size: 64
 }
 
+class Button {
+    constructor(title, width, height, onclick, parent, session) {
+        this.title = title;
+        this.parent = parent;
+        this.onclick = onclick;
+
+        this.button = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        this.button.innerHTML = `
+            <rect x=0 y=0 width=${width} height=${height} fill="lightgrey"></rect>
+            <text x=${width/2} height="${height/2}" alignment-baseline="middle" text=anchor="middle">${title}</text>
+            <line x1=0 y1=0 x2=${width-1} y2=0 stroke="white"></line>
+            <line x1=0 y1=0 y2=${height-1} x2=0 stroke="white"></line>
+            <line x1=${width} y1=1 x2=${width} y2=${height} stroke="darkgrey"></line>
+            <line x1=${width} y1=${height} y2=${height} x2=1 stroke="darkgrey"></line>
+        `;
+        this.button.addEventListener("mousedown", () => {
+            this.invert_shadows();
+        }, false);
+        this.button.addEventListener("mouseleave", () => {
+            console.log("coucou");
+        }, false);
+        this.button.addEventListener("mouseup", () => {
+            // TODO must make sure that, upon entering the button, the user
+            // isn't already pressing the mouse button down.
+            this.invert_shadows();
+            this.onclick();
+        }, false);
+    }
+
+    invert_shadows() {
+        let lines = this.button.getElementsByTagName("line");
+        for (let line of lines) {
+            let color = line.getAttribute("stroke");
+            if (color == "darkgrey")
+                line.setAttribute("stroke", "white");
+            else
+                line.setAttribute("stroke", "darkgrey");
+        }
+    }
+
+    draw(x, y) {
+        this.x = x;
+        this.y = y;
+        this.button.setAttribute("transform", `translate(${x}, ${y})`);
+        this.parent.appendChild(this.button);
+    }
+}
+
 class Icon {
     constructor(title, svgicon, callback, parent) {
         this.title = title;
@@ -81,6 +129,7 @@ class Window {
         this.parent = parent;
         this.session = session;
         this.title = title;
+        this.children = [];
 
         this.win = document.createElementNS("http://www.w3.org/2000/svg", "g");
         this.win.setAttribute("width", width);
@@ -168,6 +217,16 @@ class Window {
         this.y = y;
         this.win.setAttribute("transform", `translate(${x}, ${y})`);
         this.parent.appendChild(this.win);
+
+        for (let child of this.children) {
+            child.draw(child.x, child.y);
+        }
+    }
+
+    add_child(child) {
+        if (!this.children)
+            this.children = [];
+        this.children.push(child);
     }
 }
 
@@ -221,6 +280,13 @@ class Sietch {
         this.last_creation_offset = (this.last_creation_offset + 30) % 120;
 
         return newwin;
+    }
+
+    add_button(width, height, title, callback, win) {
+        let button = new Button(title, width, height, callback, win.win);
+        win.add_child(button);
+        win.draw(this.last_creation_offset, this.last_creation_offset);
+        return button;
     }
 
     create_icon(title, icon, cb) {

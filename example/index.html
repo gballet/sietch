@@ -10,11 +10,11 @@
             let sietch = new Sietch(container);
             sietch.go();
 
-            /*console.log(sietch.create_window(500, 300, "window 1"));
-            console.log(sietch.create_window(500, 300, "window 2"));
-            console.log(sietch.create_window(500, 300, "window 3"));*/
             console.log(sietch.create_icon("click me", "<circle r=10 fill='blue' stroke-width=1 stroke='black'></circle>", () => {
-                sietch.create_window(300, 200, "started from icon");
+                let win = sietch.create_window(300, 200, "started from icon");
+                let button = sietch.add_button(30, 10, "click me!", () => {
+                    alert("you clicked!");
+                }, win);
             }));
         </script>
     </body>
