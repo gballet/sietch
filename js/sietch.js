@@ -13,6 +13,8 @@ class Button {
         this.parent = parent;
         this.onclick = onclick;
         this.pressed = false;
+        this.x = 0;
+        this.y = 0;
 
         this.button = document.createElementNS("http://www.w3.org/2000/svg", "g");
         this.button.innerHTML = `
@@ -53,10 +55,14 @@ class Button {
         }
     }
 
-    draw(x, y) {
+    set_position(x, y) {
         this.x = x;
         this.y = y;
-        this.button.setAttribute("transform", `translate(${x}, ${y})`);
+    }
+
+    draw() {
+        console.log(this.parent, this.button);
+        this.button.setAttribute("transform", `translate(${this.x}, ${this.y})`);
         this.parent.appendChild(this.button);
     }
 }
@@ -157,9 +163,11 @@ class Window {
                 font-size="20" font-family="Verdana"
                 fill="${default_theme.titlebar_fg}">${this.title}</text>
 
-            <rect y="30px" id="main_frame"
-                width="${this.width}" height="${this.height - 30}px"
+            <g id="main_frame" transform="translate(0, 30)"
+                width="${this.width}" height="${this.height - 30}px">
+                <rect width="${this.width}" height="${this.height - 30}px"
                 fill="${default_theme.window_bg}"></rect>
+            </g>
         `;
 
         let close_button = this.win.querySelector("#close_button");
@@ -204,8 +212,8 @@ class Window {
             };
         }, false);
 
-        let main_frame = this.win.querySelector("#main_frame");
-        main_frame.addEventListener("click", this.on_click);
+        this.main_frame = this.win.querySelector("#main_frame");
+        this.main_frame.addEventListener("click", this.on_click);
     }
 
     on_click(e) {
@@ -225,7 +233,7 @@ class Window {
         this.parent.appendChild(this.win);
 
         for (let child of this.children) {
-            child.draw(child.x, child.y);
+            child.draw();
         }
     }
 
@@ -289,7 +297,7 @@ class Sietch {
     }
 
     add_button(width, height, title, callback, win) {
-        let button = new Button(title, width, height, callback, win.win);
+        let button = new Button(title, width, height, callback, win.main_frame);
         win.add_child(button);
         win.draw(this.last_creation_offset, this.last_creation_offset);
         return button;
