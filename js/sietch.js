@@ -18,8 +18,13 @@ class Button {
 
         this.button = document.createElementNS("http://www.w3.org/2000/svg", "g");
         this.button.innerHTML = `
+            <defs>
+                <clipPath id="buttonlimits">
+                    <rect x=1 y=1 width=${width-1} height=${height-1}></rect>
+                </clipPath>
+            </defs>
             <rect x=0 y=0 width=${width} height=${height} fill="lightgrey"></rect>
-            <text x=${width/2} height="${height/2}" alignment-baseline="middle" text=anchor="middle">${title}</text>
+            <text x=${width/2} y="${height/2}" alignment-baseline="middle" text-anchor="middle" clip-path="url(#buttonlimits)">${title}</text>
             <line x1=0 y1=0 x2=${width-1} y2=0 stroke="white"></line>
             <line x1=0 y1=0 y2=${height-1} x2=0 stroke="white"></line>
             <line x1=${width} y1=1 x2=${width} y2=${height} stroke="darkgrey"></line>
