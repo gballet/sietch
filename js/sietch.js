@@ -30,9 +30,11 @@ class Button {
             <line x1=${width} y1=1 x2=${width} y2=${height} stroke="darkgrey"></line>
             <line x1=${width} y1=${height} y2=${height} x2=1 stroke="darkgrey"></line>
         `;
-        this.button.addEventListener("mousedown", () => {
-            this.pressed = true;
-            this.invert_shadows();
+        this.button.addEventListener("mousedown", (e) => {
+            if (e.buttons == 1) {
+                this.pressed = true;
+                this.invert_shadows();
+            }
         }, false);
         this.button.addEventListener("mouseleave", () => {
             if (this.pressed) {
