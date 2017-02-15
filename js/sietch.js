@@ -186,6 +186,12 @@ class Window {
             }
         });
 
+        this.win.addEventListener("click", () => {
+            /* Bring the window to the foreground */
+            this.parent.removeChild(this.win);
+            this.parent.appendChild(this.win);
+        });
+
         this.titlebar = this.win.querySelector("#titlebar");
         this.titlebar.addEventListener("mousedown", (e) => {
             this.move_x = e.clientX;
