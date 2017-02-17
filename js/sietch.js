@@ -109,14 +109,20 @@ class Menu {
         this.data = data;
         this.parent = parent;
         this.session = session;
+        this.visible = false;
 
         // TODO check format for data
+    }
+
+    is_visible() {
+        return this.visible;
     }
 
     show(x,y) {
         this.menu = document.createElementNS("http://www.w3.org/2000/svg", "g");
         this.menu.x = x;
         this.menu.y = y;
+        this.visible = true;
 
         let entries = "";
         for (let i in this.data) {
@@ -133,10 +139,16 @@ class Menu {
         this.parent.appendChild(this.menu);
     }
 
+    hide() {
+        this.parent.removeChild(this.menu);
+        this.visible = false;
+    }
+
     clicked(event) {
         let entry = Math.floor(+(event.pageY - this.menu.y) / 30);
         if (event.buttons == 0) {
             this.data[entry][1]();
+            this.hide();
         }
     }
 }
@@ -275,6 +287,10 @@ class Sietch {
             e.preventDefault();
 
             if (e.buttons == 2) {
+                if (this.desktop_menu.is_visible()) {
+                    this.desktop_menu.hide();
+                }
+
                 this.desktop_menu.show(e.pageX, e.pageY);
             }
         }, false);
