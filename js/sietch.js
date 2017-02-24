@@ -267,6 +267,10 @@ class Window {
     }
 }
 
+/**  This is the main interface to the windowing system. All windows, menus and
+ *   so on need to be created through these interface methods.
+ *   @constructor(element) Takes the name of a DOM element the system will be drawn in.
+ */
 class Sietch {
     constructor(element) {
         this.container = element;
@@ -274,13 +278,17 @@ class Sietch {
         this.frame.setAttribute("width", "100%");
         this.frame.setAttribute("height", "100%");
 
+        // Context menu for the background
+        this.desktop_menu = new Menu([["New...", (e) => { alert("Not yet implemented"); }]], this.frame, this);
+
+        // The background, which covers the entire space. It should be the furthest
+        // back and thus, is added first.
         this.background = document.createElementNS("http://www.w3.org/2000/svg", "rect");
         this.background.setAttribute("width", "100%");
         this.background.setAttribute("height", "100%");
         this.set_background(this.background, default_theme.desktop_background);
 
-        this.desktop_menu = new Menu([["New...", (e) => { alert("Not yet implemented"); }]], this.frame, this);
-
+        // Handle the context menu. It is shown by clicking on the right button.
         this.background.addEventListener("contextmenu", (e) => {
             e.preventDefault();
 
@@ -293,12 +301,16 @@ class Sietch {
             }
         }, false);
 
-        // Like old Windows(tm) time
+        // Show windows at increasing offset from the top left corner. Like old
+        // Windows(tm) time
         this.last_creation_offset = 0;
 
         this.frame.appendChild(this.background);
     }
 
+    /**
+     * The function that starts it all, by adding the system to the DOM.
+     */
     go() {
         this.container.appendChild(this.frame);
     }
@@ -307,6 +319,13 @@ class Sietch {
         this.windows = this.windows.filter(w => w != win);
     }
 
+    /**
+     * Interface helper to create a window.
+     * @param width Window width, in pixels
+     * @param height Window height, in pixels
+     * @param title Window title (string)
+     * @returns A window object
+     */
     create_window(width, height, title) {
         if (!this.windows) {
             this.windows = [];
@@ -323,13 +342,30 @@ class Sietch {
         return newwin;
     }
 
+    /**
+     * Interface helper to create a button.
+     * @param width Button width, in pixels
+     * @param height Button height, in pixels
+     * @param title Button title (string)
+     * @param callback A function to be called when the button is clicked.
+     * @param win The parent window
+     * @returns A button object
+     */
     add_button(width, height, title, callback, win) {
         let button = new Button(title, width, height, callback, win.main_frame);
         win.add_child(button);
         win.draw(this.last_creation_offset, this.last_creation_offset);
         return button;
     }
-
+    /**
+     * Interface helper to create a icon.
+     * @param title Icon title (string)
+     * @param icon SVG data to use as icon.
+     * @param cb A function to be called when the icon is double-clicked.
+     * @param parent If specified, the parent window. Otherwise, the background
+     *               is used as parent.
+     * @returns An icon object
+     */
     create_icon(title, icon, cb) {
         let newicon = new Icon(title, icon, cb, this.frame);
         newicon.set_position(10, 10);
