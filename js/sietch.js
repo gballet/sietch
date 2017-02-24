@@ -151,7 +151,18 @@ class Menu {
     }
 }
 
+/**
+ * Represents a window.
+ * @class
+ */
 class Window {
+    /**
+     * @param title Window title
+     * @param width Window width
+     * @param height Window height
+     * @param parent The parent of this window
+     * @param session A reference to the session this window is a part of
+     */
     constructor(title, width, height, parent, session) {
         this.width = width;
         this.height = height;
@@ -197,7 +208,9 @@ class Window {
         });
 
         this.win.addEventListener("click", () => {
-            /* Bring the window to the foreground */
+            // Bring the window to the foreground if clicked. This is done by
+            // removing it from the parent and re-adding it there, as SVG draws
+            // children bottom-up.
             this.parent.removeChild(this.win);
             this.parent.appendChild(this.win);
         });
@@ -239,16 +252,20 @@ class Window {
         this.main_frame.addEventListener("click", this.on_click);
     }
 
+    /** Overload if you want to catch a click on the window */
     on_click(e) {
         console.log(e);
     }
 
-    // Default callback: simply returns true, which means that the window
-    // should be closed.
+    /**
+     * Overload if you want to catch a window close event. Return `true` if
+     * the window can be closed.
+     */
     on_quit() {
         return true;
     }
 
+    /** Draw the window, with its children */
     draw(x, y) {
         this.x = x;
         this.y = y;
@@ -260,6 +277,7 @@ class Window {
         }
     }
 
+    /** Add a child of type widget to the window */
     add_child(child) {
         if (!this.children)
             this.children = [];
