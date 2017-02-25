@@ -7,17 +7,34 @@ const default_theme = {
     icon_size: 64
 }
 
-class Button {
-    constructor(title, width, height, onclick, parent, session) {
-        this.title = title;
+class Widget {
+    constructor(parent, type) {
         this.parent = parent;
+
+        this.widget = document.createElementNS("http://www.w3.org/2000/svg", type);
+    }
+
+    set_position(x, y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    draw() {
+        this.widget.setAttribute("transform", `translate(${this.x}, ${this.y})`);
+        this.parent.appendChild(this.widget);
+    }
+}
+
+class Button extends Widget {
+    constructor(title, width, height, onclick, parent, session) {
+        super(parent, "g");
+
+        this.title = title;
         this.onclick = onclick;
         this.pressed = false;
-        this.x = 0;
-        this.y = 0;
+        this.set_position(0, 0);
 
-        this.button = document.createElementNS("http://www.w3.org/2000/svg", "g");
-        this.button.innerHTML = `
+        this.widget.innerHTML = `
             <defs>
                 <clipPath id="buttonlimits">
                     <rect x=1 y=1 width=${width-1} height=${height-1}></rect>
@@ -30,19 +47,19 @@ class Button {
             <line x1=${width} y1=1 x2=${width} y2=${height} stroke="darkgrey"></line>
             <line x1=${width} y1=${height} y2=${height} x2=1 stroke="darkgrey"></line>
         `;
-        this.button.addEventListener("mousedown", (e) => {
+        this.widget.addEventListener("mousedown", (e) => {
             if (e.buttons == 1) {
                 this.pressed = true;
                 this.invert_shadows();
             }
         }, false);
-        this.button.addEventListener("mouseleave", () => {
+        this.widget.addEventListener("mouseleave", () => {
             if (this.pressed) {
                 this.pressed = false;
                 this.invert_shadows();
             }
         }, false);
-        this.button.addEventListener("mouseup", () => {
+        this.widget.addEventListener("mouseup", () => {
             if (this.pressed) {
                 this.pressed = false;
                 this.invert_shadows();
@@ -52,7 +69,7 @@ class Button {
     }
 
     invert_shadows() {
-        let lines = this.button.getElementsByTagName("line");
+        let lines = this.widget.getElementsByTagName("line");
         for (let line of lines) {
             let color = line.getAttribute("stroke");
             if (color == "darkgrey")
@@ -61,45 +78,26 @@ class Button {
                 line.setAttribute("stroke", "darkgrey");
         }
     }
-
-    set_position(x, y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    draw() {
-        console.log(this.parent, this.button);
-        this.button.setAttribute("transform", `translate(${this.x}, ${this.y})`);
-        this.parent.appendChild(this.button);
-    }
 }
 
-class Icon {
+class Icon extends Widget {
     constructor(title, svgicon, callback, parent) {
+        super(parent, "g");
+
         this.title = title;
-        this.parent = parent;
         this.callback = callback;
 
-        this.icon = document.createElementNS("http://www.w3.org/2000/svg", "g");
-
         // TODO add stroke='blue' to the rect if selected
-        this.icon.innerHTML = `
+        this.widget.innerHTML = `
             <rect x=0 y=0 width=64 height=64 fill="#0000"></rect>
             <g transform="translate(32, 32)">
                 ${svgicon}
             </g>
             <text transform="translate(0, ${64 + 20})">${title}</text>
         `;
-        this.icon.addEventListener('dblclick', (e) => {
+        this.widget.addEventListener('dblclick', (e) => {
             this.callback();
         });
-    }
-
-    draw(x, y) {
-        this.x = x;
-        this.y = y;
-        this.icon.setAttribute("transform", `translate(${x}, ${y})`);
-        this.parent.appendChild(this.icon);
     }
 }
 
@@ -334,7 +332,8 @@ class Sietch {
 
     create_icon(title, icon, cb) {
         let newicon = new Icon(title, icon, cb, this.frame);
-        newicon.draw(10, 10);
+        newicon.set_position(10, 10);
+        newicon.draw();
         return newicon;
     }
 
