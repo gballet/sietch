@@ -369,8 +369,9 @@ class Sietch {
      * @param win The parent window
      * @returns A button object
      */
-    add_button(width, height, title, callback, win) {
+    add_button(x, y, width, height, title, callback, win) {
         let button = new Button(title, width, height, callback, win.main_frame);
+        button.set_position(x, y);
         win.add_child(button);
         win.draw(this.last_creation_offset, this.last_creation_offset);
         return button;

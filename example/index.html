@@ -12,7 +12,7 @@
 
             console.log(sietch.create_icon("click me", "<circle r=10 fill='blue' stroke-width=1 stroke='black'></circle>", () => {
                 let win = sietch.create_window(300, 200, "started from icon");
-                let button = sietch.add_button(80, 25, "click me!", () => {
+                let button = sietch.add_button(0, 25, 80, 25, "click me!", () => {
                     alert("you clicked!");
                 }, win);
             }));
