@@ -25,6 +25,21 @@ class Widget {
     }
 }
 
+class Label extends Widget {
+    constructor(text, width, height, parent, session) {
+        super(parent, "g");
+
+        this.widget.innerHTML = `
+            <defs>
+                <clipPath id="labellimits">
+                    <rect x=0 y=0 width=${width-1} height=${height-1}></rect>
+                </clipPath>
+            </defs>
+            <text x=0 y=15 clip-path="url(#labellimits)">${text}</text>
+        `;
+    }
+}
+
 class Button extends Widget {
     constructor(title, width, height, onclick, parent, session) {
         super(parent, "g");
@@ -376,6 +391,15 @@ class Sietch {
         win.draw(this.last_creation_offset, this.last_creation_offset);
         return button;
     }
+
+    add_label(text, x, y, width, height, win) {
+        let label = new Label(text, width, height, win.main_frame);
+        label.set_position(x, y);
+        win.add_child(label);
+        win.draw(this.last_creation_offset, this.last_creation_offset);
+        return label;
+    }
+
     /**
      * Interface helper to create a icon.
      * @param title Icon title (string)
