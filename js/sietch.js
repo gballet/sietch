@@ -3,6 +3,7 @@ const default_theme = {
     titlebar_bg: "blue",
     titlebar_fg: "white",
     titlebar_close_button_color: "red",
+    titlebar_max_button_color: "yellow",
     desktop_background: {type: "color", color: "#ccc"},
     icon_size: 64
 }
@@ -202,7 +203,12 @@ class Window {
                 </g>
             </g>
 
-            <text x="30" y="20"
+            <g transform="translate(35, 15)" id="max_button">
+                <circle r="10" fill="${default_theme.titlebar_max_button_color}" stroke-width=1 stroke="black"></circle>
+                <rect width="10" height="10" x="-5" y="-5" fill="none" stroke="black"></rect>
+            </g>
+
+            <text x="50" y="20"
                 font-size="20" font-family="Verdana"
                 fill="${default_theme.titlebar_fg}">${this.title}</text>
 
