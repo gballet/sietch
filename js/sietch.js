@@ -186,6 +186,7 @@ class Window {
         this.session = session;
         this.title = title;
         this.children = [];
+        this.maximized = false;
 
         this.win = document.createElementNS("http://www.w3.org/2000/svg", "g");
         this.win.setAttribute("width", width);
@@ -215,9 +216,12 @@ class Window {
             <g id="main_frame" transform="translate(0, 30)"
                 width="${this.width}" height="${this.height - 30}px">
                 <rect width="${this.width}" height="${this.height - 30}px"
+                id="body"
                 fill="${default_theme.window_bg}"></rect>
             </g>
         `;
+
+        this.body = this.win.querySelector("#body");
 
         let close_button = this.win.querySelector("#close_button");
         close_button.addEventListener("click", (e) => {
@@ -227,6 +231,24 @@ class Window {
                 this.session.remove_window(this);
             }
         });
+
+        let max_button = this.win.querySelector("#max_button");
+        max_button.addEventListener("click", (e) => {
+            e.preventDefault();
+            if (this.maximized) {
+                this.titlebar.setAttribute("width", this.width);
+                this.body.setAttribute("width", this.width);
+                this.body.setAttribute("height", this.height);
+                this.win.setAttribute("transform", `translate(${this.x}, ${this.y})`);
+                this.maximized = false;
+            } else {
+                this.titlebar.setAttribute("width", this.session.max_window_width());
+                this.body.setAttribute("width", this.session.max_window_width());
+                this.body.setAttribute("height", this.session.max_window_height());
+                this.win.setAttribute("transform", "translate(0, 0)");
+                this.maximized = true;
+            }
+        })
 
         this.win.addEventListener("click", () => {
             // Bring the window to the foreground if clicked. This is done by
@@ -431,5 +453,13 @@ class Sietch {
                 alert(`Unsupported background type ${background_info.type}`);
                 break;
         }
+    }
+
+    max_window_width() {
+        return this.background.width.baseVal.value;
+    }
+
+    max_window_height() {
+        return this.background.height.baseVal.value;
     }
 }
