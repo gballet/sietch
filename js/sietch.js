@@ -192,6 +192,11 @@ class Window {
         this.win.setAttribute("width", width);
         this.win.setAttribute("height", height);
         this.win.innerHTML = `
+            <defs>
+                <clipPath id="windowlimits">
+                    <rect x=0 y=0 width=${width-1} height=${height-1}></rect>
+                </clipPath>
+            </defs>
             <rect width="${this.width}" height="30px"
                 id="titlebar"
                 fill="${default_theme.titlebar_bg}"></rect>
@@ -210,6 +215,7 @@ class Window {
             </g>
 
             <text x="50" y="20"
+                clip-path="url(#windowlimits)"
                 font-size="20" font-family="Verdana"
                 fill="${default_theme.titlebar_fg}">${this.title}</text>
 
@@ -242,6 +248,7 @@ class Window {
                 this.win.setAttribute("transform", `translate(${this.x}, ${this.y})`);
                 this.maximized = false;
             } else {
+                // BUG the clip-path needs to be removed for the title
                 this.titlebar.setAttribute("width", this.session.max_window_width());
                 this.body.setAttribute("width", this.session.max_window_width());
                 this.body.setAttribute("height", this.session.max_window_height());
