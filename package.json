@@ -1,0 +1,33 @@
+{
+  "name": "sietch",
+  "version": "1.0.0",
+  "description": "An SVG-based windowing library",
+  "main": "index.js",
+  "devDependencies": {
+    "mocha": "^3.1.2"
+  },
+  "directories": {
+    "example": "example"
+  },
+  "scripts": {
+    "dist": "brunch build",
+    "test": "mocha --reporter spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gballet/sietch.git"
+  },
+  "keywords": [
+    "svg",
+    "window"
+  ],
+  "author": "Guillaume Ballet",
+  "license": "Unlicense",
+  "bugs": {
+    "url": "https://github.com/gballet/sietch/issues"
+  },
+  "homepage": "https://github.com/gballet/sietch#readme",
+  "dependencies": {
+    "brunch": "^2.10.8"
+  }
+}
