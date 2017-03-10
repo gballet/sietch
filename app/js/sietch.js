@@ -470,3 +470,5 @@ class Sietch {
         return this.background.height.baseVal.value;
     }
 }
+
+module.exports = Sietch;

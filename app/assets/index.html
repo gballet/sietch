@@ -1,11 +1,12 @@
 <html>
     <head>
-        <script lang="javascript" src="../js/sietch.js"></script>
+        <script lang="javascript" src="app.js"></script>
     </head>
     <body>
         <div id="container"></div>
 
         <script lang="javascript">
+            const Sietch = require("js/sietch");
             let container = document.getElementById("container");
             let sietch = new Sietch(container);
             sietch.go();
