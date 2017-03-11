@@ -6,18 +6,20 @@
         <div id="container"></div>
 
         <script lang="javascript">
-            const Sietch = require("js/sietch");
-            let container = document.getElementById("container");
-            let sietch = new Sietch(container);
-            sietch.go();
+            document.addEventListener("DOMContentLoaded", () => {
+                const Sietch = require("js/sietch");
+                let container = document.getElementById("container");
+                let sietch = new Sietch(container);
+                sietch.go();
 
-            console.log(sietch.create_icon("click me", "<circle r=10 fill='blue' stroke-width=1 stroke='black'></circle>", () => {
-                let win = sietch.create_window(300, 200, "started from icon");
-                let button = sietch.add_button(0, 25, 80, 25, "click me!", () => {
-                    alert("you clicked!");
-                }, win);
-                let label = sietch.add_label("click on this button", 0, 5, 200, 30, win);
-            }));
+                console.log(sietch.create_icon("click me", "<circle r=10 fill='blue' stroke-width=1 stroke='black'></circle>", () => {
+                    let win = sietch.create_window(300, 200, "started from icon");
+                    let button = sietch.add_button(0, 25, 80, 25, "click me!", () => {
+                        alert("you clicked!");
+                    }, win);
+                    let label = sietch.add_label("click on this button", 0, 5, 200, 30, win);
+                }));
+            });
         </script>
     </body>
 </html>
