@@ -8,93 +8,9 @@ const default_theme = {
     icon_size: 64
 }
 
-class Widget {
-    constructor(parent, type) {
-        this.parent = parent;
-
-        this.widget = document.createElementNS("http://www.w3.org/2000/svg", type);
-    }
-
-    set_position(x, y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    draw() {
-        this.widget.setAttribute("transform", `translate(${this.x}, ${this.y})`);
-        this.parent.appendChild(this.widget);
-    }
-}
-
-class Label extends Widget {
-    constructor(text, width, height, parent, session) {
-        super(parent, "g");
-
-        this.widget.innerHTML = `
-            <defs>
-                <clipPath id="labellimits">
-                    <rect x=0 y=0 width=${width-1} height=${height-1}></rect>
-                </clipPath>
-            </defs>
-            <text x=0 y=15 clip-path="url(#labellimits)">${text}</text>
-        `;
-    }
-}
-
-class Button extends Widget {
-    constructor(title, width, height, onclick, parent, session) {
-        super(parent, "g");
-
-        this.title = title;
-        this.onclick = onclick;
-        this.pressed = false;
-        this.set_position(0, 0);
-
-        this.widget.innerHTML = `
-            <defs>
-                <clipPath id="buttonlimits">
-                    <rect x=1 y=1 width=${width-1} height=${height-1}></rect>
-                </clipPath>
-            </defs>
-            <rect x=0 y=0 width=${width} height=${height} fill="lightgrey"></rect>
-            <text x=${width/2} y="${height/2}" alignment-baseline="middle" text-anchor="middle" clip-path="url(#buttonlimits)">${title}</text>
-            <line x1=0 y1=0 x2=${width-1} y2=0 stroke="white"></line>
-            <line x1=0 y1=0 y2=${height-1} x2=0 stroke="white"></line>
-            <line x1=${width} y1=1 x2=${width} y2=${height} stroke="darkgrey"></line>
-            <line x1=${width} y1=${height} y2=${height} x2=1 stroke="darkgrey"></line>
-        `;
-        this.widget.addEventListener("mousedown", (e) => {
-            if (e.buttons == 1) {
-                this.pressed = true;
-                this.invert_shadows();
-            }
-        }, false);
-        this.widget.addEventListener("mouseleave", () => {
-            if (this.pressed) {
-                this.pressed = false;
-                this.invert_shadows();
-            }
-        }, false);
-        this.widget.addEventListener("mouseup", () => {
-            if (this.pressed) {
-                this.pressed = false;
-                this.invert_shadows();
-                this.onclick();
-            }
-        }, false);
-    }
-
-    invert_shadows() {
-        let lines = this.widget.getElementsByTagName("line");
-        for (let line of lines) {
-            let color = line.getAttribute("stroke");
-            if (color == "darkgrey")
-                line.setAttribute("stroke", "white");
-            else
-                line.setAttribute("stroke", "darkgrey");
-        }
-    }
-}
+const Widget = require("js/widget");
+const Button = require("js/button");
+const Label = require("js/label");
 
 class Icon extends Widget {
     constructor(title, svgicon, callback, parent) {
