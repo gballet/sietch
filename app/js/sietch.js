@@ -21,7 +21,7 @@ class Icon extends Widget {
 
         // TODO add stroke='blue' to the rect if selected
         this.widget.innerHTML = `
-            <rect x=0 y=0 width=64 height=64 fill="#0000"></rect>
+            <rect x=0 y=0 width=64 height=64 fill="rgba(0,0,0,0)"></rect>
             <g transform="translate(32, 32)">
                 ${svgicon}
             </g>
