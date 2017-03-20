@@ -38,3 +38,15 @@ windowing system.
 Windows can then be created with:
 
     sietch.create_window(300, 200, "A new window");
+
+# Running the example
+
+Sietch is using [Brunch](http://brunch.io/). To build the example, simply type:
+
+    $ brunch build
+
+And you can then run the example with:
+
+    $ brunch watch --server
+
+The example is then available at `http://localhost:3333`. 
