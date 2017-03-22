@@ -3,7 +3,7 @@ const Widget = require("js/widget")
 describe("Widget class test", () => {
     const fakeX = 90;
     const fakeY = 267;
-    const fakeParent = "fake";
+    const fakeParent = document.createElement("div");
 
     it("should be able to instantiate a 'g' widget", () => {
         expect(() => {
@@ -24,10 +24,11 @@ describe("Widget class test", () => {
     });
 
     it("should set the `transform` attribute to reflect (x,y) coordinates", () => {
-        /*let widget = new Widget(fakeParent, "g");
+        let widget = new Widget(fakeParent, "g");
         widget.set_position(fakeX, fakeY);
         widget.draw();
         const transform_attr = widget.widget.getAttribute("transform");
-        expect(transform_attr).to.equal(`translate(${this.x}, ${this.y})`);*/
+        expect(transform_attr).to.equal(`translate(${fakeX}, ${fakeY})`);
+    });
     });
 });
