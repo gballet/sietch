@@ -6,10 +6,9 @@ describe("Widget class test", () => {
     const fakeParent = "fake";
 
     it("should be able to instantiate a 'g' widget", () => {
-        /*console.log(expect);
         expect(() => {
             let widget = new Widget(null, "g");
-        }).not.to.throw();*/
+        }).not.to.throwException();
     });
 
     it("should set the parent correctly", () => {
