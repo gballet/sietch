@@ -37,5 +37,16 @@ describe("Widget class test", () => {
         const transform_attr = widget.widget.getAttribute("transform");
         expect(transform_attr).to.equal(`translate(${fakeX}, ${fakeY})`);
     });
+
+    it("should append the widget as a child of the parent", () => {
+        let widget = new Widget(this.fakeParent, "g");
+        widget.set_position(fakeX, fakeY);
+
+        let gs_before = fakeParent.getElementsByTagName("g");
+        expect(gs_before.length).to.be(0);
+
+        widget.draw();
+        let gs_after = fakeParent.getElementsByTagName("g");
+        expect(gs_after.length).to.be(1);
     });
 });
