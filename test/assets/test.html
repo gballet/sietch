@@ -1,0 +1,28 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Sietch Unit Tests</title>
+    <link rel="stylesheet" href="test-vendor.css" />
+
+    <script src="vendor.js"></script>
+    <script lang="javascript" src="app.js"></script>
+    <script lang="javascript" src="test-vendor.js"></script>
+    <script src="https://cdn.rawgit.com/Automattic/expect.js/0.3.1/index.js"></script>
+    <script>
+      mocha.setup('bdd');
+    </script>
+    <script src="test.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        /* Load each test file */
+        require.list()
+            .filter(name => /^test\//.test(name))
+            .forEach(require);
+        mocha.run();
+      });
+    </script>
+  </head>
+  <body>
+    <div id="mocha"></div>
+  </body>
+</html>

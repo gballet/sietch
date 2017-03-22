@@ -49,4 +49,14 @@ And you can then run the example with:
 
     $ brunch watch --server
 
-The example is then available at `http://localhost:3333`. 
+The example is then available at `http://localhost:3333`.
+
+# Running the unit tests
+
+Unit testing is based on [Mocha](http://mochajs.org). At the time of writing,
+brunch has a very unstable support of unit testing so the unit tests are a bit
+tacky. Start the server with:
+
+    $ brunch watch --server
+
+then point your browser to `http://localhost:3333/test.html`.
